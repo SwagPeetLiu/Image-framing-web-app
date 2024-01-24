@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    vertical-align:auto;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Verdana, sans-serif;
+    background-color: antiquewhite;
+    color: black;
+}
+
+#upload-container {
+    margin-bottom: 10px;
+}
+
+#product-image-container {
+    position: relative;
+    margin-top: 2px;
+    max-width: 350px; 
+    max-height: 400px;
+    overflow: hidden; /* Hide any content that overflows the container */
+}
+
+#productImage {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px;
+}
+
+#circle-overlay {
+    position: absolute;
+    top: 50%;
+    left: 67%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background-color: rgba(222, 215, 195, 0.6); /* Adjust background color and opacity as needed */
+    border-radius: 50%;
+}

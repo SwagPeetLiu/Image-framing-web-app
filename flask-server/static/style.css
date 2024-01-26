@@ -9,6 +9,7 @@ body {
     font-family: Verdana, sans-serif;
     background-color: antiquewhite;
     color: black;
+    overflow-y: auto;
 }
 
 #upload-container {
@@ -37,6 +38,13 @@ body {
     transform: translate(-50%, -50%);
     width: 150px;
     height: 150px;
-    background-color: rgba(222, 215, 195, 0.6); /* Adjust background color and opacity as needed */
     border-radius: 50%;
+}
+
+#logo-table{
+    border: 2px solid gray;
+}
+#logo-table th, #logo-table td{
+    border: 1px solid gray;
+    padding: 4px;
 }

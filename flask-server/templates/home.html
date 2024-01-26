@@ -11,22 +11,28 @@
 <body>
     <h1>Welcome to the Logo printer!</h1>
     <div id="upload-container">
-        <h3>Please upload the logo you wish to use:</h3>
-        <input type="file" id="logoInput" accept=".jpg, .png">
-        <button onclick="uploadLogo()">Upload Logo</button>
+        <p>Please upload the logo you wish to use:</p>
+        <input type="file" id="logoInput" accept=".jpg, .png" onchange="adjustUploadButton()">
+        <button id="uploadButton" onclick="uploadLogo()" disabled>Upload Logo</button>
     </div>
-    <h3>Please a logo in the following demo image</h3>
+    <p>Frame your logo in the following demo image</p>
     <div id="product-image-container">
         <img id="productImage" src="{{url_for('static', filename='images/demo-image.jpg')}}" alt="Product Image">
-        <img id="circle-overlay" src="{{url_for('static',filename='images/trans-image.jpg')}}">
+        <img id="circle-overlay" src="{{url_for('static',filename='images/trans-img.jpg')}}">
     </div>
-    <div id="logo-listing-container">
-        <p>Note, You can use any existing logos that you have uploaded!</p>
-        <ul id="logo-list">
-
-        </ul>
+    <div id="logo-listing-container" style="visibility: hidden">
+        <p>*Note, You can use any existing logos that you have uploaded!</p>
+        <table id="logo-table">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Time</th>
+                    <!-- Rows will be dynamically added here based on user uploads -->
+                </tr>
+            </thead>
+            
+        </table>
     </div>
-
     <script src="{{ url_for('static', filename='upload.js') }}"></script>
     <script src="{{ url_for('static', filename='print.js') }}"></script>
 </body>

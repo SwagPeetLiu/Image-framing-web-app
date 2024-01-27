@@ -8,3 +8,5 @@ This application is dedicated to demonstrate the fundamental understanding of we
 2. Image framing (canvas-based)
 3. downloadability
 4. ability to switch between uploaded images
+
+Try the functionailities with the provided demo logo!

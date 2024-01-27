@@ -1,6 +1,9 @@
+import frameLogo  from "./frameLogo.js"
+import adjustUploadButton from "./adjustUploadButton.js"
+import adjustDownloadButton from "./print.js"
+
 // Function used to uploadLogo to the server
 function uploadLogo(){
-
     // reference to the current logo
     var input = document.getElementById("logoInput")
     var file = input.files[0]
@@ -30,6 +33,9 @@ function uploadLogo(){
 
         // clear the image input field
         clearFileInput(input)
+
+        // Enable downloading:
+        adjustDownloadButton()
     })
     .catch (error => {
         console.log('Error', error);
@@ -86,7 +92,6 @@ function adjustTableVisibility(listContainer, logoTable, newID){
     // adjust all other potential logos' clickability:
     for (var rowIndex = 1; rowIndex < logoTable.rows.length; rowIndex++){
         var listedLogo = logoTable.rows[rowIndex].cells[0]
-        console.log("triggered",listedLogo.getAttribute("StorageID"))
         var listedID = listedLogo.getAttribute("StorageID")
         if (listedID != newID){
             listedLogo.classList.add("logo-switch-style")
@@ -96,25 +101,6 @@ function adjustTableVisibility(listContainer, logoTable, newID){
             listedLogo.classList.remove("logo-switch-style")
         }
     }
-}
-
-// function used to set style of the current logo display in the table:
-function frameLogo(storageID){
-    
-    // fetch the stored image path for attachment:
-    fetch(`/getStoragePath?StorageID=${storageID}`,{
-        method: 'GET'
-    })
-    .then(Response => Response.json())
-    .then(data => {
-        //frame logo
-        fetchedPath = data["Logo_Storage_Path"]
-        var overlayImage = document.getElementById("circle-overlay")
-        overlayImage.setAttribute("src", fetchedPath)
-    })
-    .catch(error => {
-        console.log("Error", error)
-    })
 }
 
 // functio used to clear the image input field
@@ -132,22 +118,4 @@ function clearFileInput(input){
     }
     adjustUploadButton()
 }
-
-// listener function that controls button's clickability
-function adjustUploadButton(){
-    var logoInput = document.getElementById("logoInput");
-    var uploadButton = document.getElementById("uploadButton");
-
-    // Check if the input is not empty
-    try{
-        if (logoInput.files.length > 0) {
-            uploadButton.disabled = false;
-        } else {
-            uploadButton.disabled = true;
-        }
-    }
-    catch(error){
-        console.log('unable to check the file existence', error)
-        uploadButton.disabled = true;
-    }
-}
+export default uploadLogo

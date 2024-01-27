@@ -9,18 +9,19 @@
 </head>
 
 <body>
+    
     <h1>Welcome to the Logo printer!</h1>
     <div id="upload-container">
         <p>Please upload the logo you wish to use:</p>
-        <input type="file" id="logoInput" accept=".jpg, .png" onchange="adjustUploadButton()">
-        <button id="uploadButton" onclick="uploadLogo()" disabled>Upload Logo</button>
+        <input type="file" id="logoInput" accept=".jpg, .png">
+        <button id="uploadButton" disabled>Upload Logo</button>
     </div>
     <p>Frame your logo in the following demo image</p>
     <div id="product-image-container">
         <img id="productImage" src="{{url_for('static', filename='images/demo-image.jpg')}}" alt="Product Image">
         <img id="circle-overlay" src="{{url_for('static',filename='images/trans-img.jpg')}}">
     </div>
-    <button id="print_button" style="visibility: hidden">Print</button>
+    <button id="print-button" style="visibility: hidden"> Print </button>
     <div id="logo-listing-container" style="visibility: hidden">
         <p>*Note, You can use any existing logos that you have uploaded!</p>
         <table id="logo-table">
@@ -34,8 +35,19 @@
             
         </table>
     </div>
-    <script src="{{ url_for('static', filename='upload.js') }}"></script>
-    <script src="{{ url_for('static', filename='print.js') }}"></script>
+
+    <script type="module">
+        import adjustUploadButton from "../static/adjustUploadButton.js";
+        var input = document.getElementById("logoInput")
+        input.addEventListener('change', adjustUploadButton)
+    </script>
+
+    <script type="module">
+        import uploadLogo from "../static/upload.js";
+        var button = document.getElementById("uploadButton")
+        button.addEventListener('click', uploadLogo)
+    </script>
+
 </body>
 
 </html>

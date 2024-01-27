@@ -11,7 +11,8 @@ function uploadLogo(){
     var currentTimeStamp = new Date()
     var hours = currentTimeStamp.getHours()
     var minutes = currentTimeStamp.getMinutes()
-    var formattedTime = hours + ':' + (minutes < 10 ? "0" : "") + minutes;
+    var seconds = currentTimeStamp.getSeconds()
+    var formattedTime = hours + ':' + (minutes < 10 ? "0" : "") + minutes + ':' + (seconds < 10 ? "0": "") + seconds;
     formData.append('timestamp', formattedTime)
     console.log('FileName', `Received file named ${file.name} at ${formattedTime}`)
 
@@ -22,11 +23,10 @@ function uploadLogo(){
     .then(Response => Response.json())
     .then(data => {
         // calling out the image attachment function
-        console.log('Message', data);
-        listLogo(formattedTime, file.name)
+        listLogo(formattedTime, file.name, data["StorageID"])
 
         // set up the newly added logo
-        frameLogo(file.name)
+        frameLogo(data["StorageID"])
 
         // clear the image input field
         clearFileInput(input)
@@ -37,7 +37,7 @@ function uploadLogo(){
 }
 
 // function used to list the uploaded logo
-function listLogo(timestamp, logoName){
+function listLogo(timestamp, logoName, storageID){
     var listContainer = document.getElementById('logo-listing-container')
     var logoTable = document.getElementById("logo-table")
 
@@ -45,15 +45,37 @@ function listLogo(timestamp, logoName){
     var newRow = logoTable.insertRow()
     var fileNameCell = newRow.insertCell(0)
     fileNameCell.innerHTML = logoName
+    fileNameCell.setAttribute("StorageID", storageID)
+    fileNameCell.setAttribute("Status", "Attached")
+
+    // adding in the listener for logo swaps
+    fileNameCell.addEventListener("click", function(){
+        var currentStatus = this.getAttribute("Status")
+
+        // only proceed to swapping logos if the current image framing is not this one
+        if (currentStatus != "Attached"){
+
+            // Retrieve this current selected image to attack it:
+            frameLogo(storageID)
+
+            // list this logo as as attached
+            this.setAttribute("Status", "Attached")
+
+            // adjust the visibility of the other logos:
+            adjustTableVisibility(listContainer, logoTable, storageID)
+        }
+    })
+
+    // list the timing
     var timeCell = newRow.insertCell(1)
     timeCell.innerHTML = timestamp
     
     // examine the table's status for upload displays:
-    adjustTableVisibility(listContainer, logoTable)
+    adjustTableVisibility(listContainer, logoTable, storageID)
 }
 
 // function used to adjust the table visibility
-function adjustTableVisibility(listContainer, logoTable){
+function adjustTableVisibility(listContainer, logoTable, newID){
     if (logoTable.rowCount <= 1){
         listContainer.style.visibility = "hidden"
     }
@@ -62,14 +84,37 @@ function adjustTableVisibility(listContainer, logoTable){
     }
 
     // adjust all other potential logos' clickability:
-    
+    for (var rowIndex = 1; rowIndex < logoTable.rows.length; rowIndex++){
+        var listedLogo = logoTable.rows[rowIndex].cells[0]
+        console.log("triggered",listedLogo.getAttribute("StorageID"))
+        var listedID = listedLogo.getAttribute("StorageID")
+        if (listedID != newID){
+            listedLogo.classList.add("logo-switch-style")
+            listedLogo.setAttribute("Status", "Await")
+        }
+        else{
+            listedLogo.classList.remove("logo-switch-style")
+        }
+    }
 }
 
 // function used to set style of the current logo display in the table:
-function frameLogo(logoName){
-    var overlayImage = document.getElementById("circle-overlay")
-    var newImageSource = `/static/images/preserved-logo-images/${logoName}`
-    overlayImage.setAttribute("src", newImageSource)
+function frameLogo(storageID){
+    
+    // fetch the stored image path for attachment:
+    fetch(`/getStoragePath?StorageID=${storageID}`,{
+        method: 'GET'
+    })
+    .then(Response => Response.json())
+    .then(data => {
+        //frame logo
+        fetchedPath = data["Logo_Storage_Path"]
+        var overlayImage = document.getElementById("circle-overlay")
+        overlayImage.setAttribute("src", fetchedPath)
+    })
+    .catch(error => {
+        console.log("Error", error)
+    })
 }
 
 // functio used to clear the image input field

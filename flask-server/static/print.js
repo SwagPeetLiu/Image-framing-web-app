@@ -12,7 +12,9 @@ function downloadImage(){
 
     // draw images:
     context.drawImage(productImage, 0, 0, canvas.width, canvas.height)
-    context.drawImage(logoOverlay, 0, 0, canvas.width, canvas.height)
+    const overlayPosition = calculateOverlayPosition(logoOverlay, productImage);
+    context.drawImage(logoOverlay, overlayPosition.x, overlayPosition.y, logoOverlay.width, logoOverlay.height);
+
 
      // create psuedo link to automate download
      const dataURL = canvas.toDataURL('image/png');
@@ -24,6 +26,17 @@ function downloadImage(){
  
      // Remove the temporary anchor from the document
      document.body.removeChild(downloadLink);
+}
+
+// Calculate the position of the overlay relative to the product image
+function calculateOverlayPosition(overlay, productImage) {
+    // Calculate the position based on desired styling
+    const overlayPosition = {
+        x: productImage.width * 0.67 - overlay.width / 2,
+        y: productImage.height * 0.5 - overlay.height / 2
+    };
+
+    return overlayPosition;
 }
 
 // function used to fetch Name of the framed logo

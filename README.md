@@ -13,6 +13,7 @@ Try the functionailities with the provided demo logo!
 
 # How to run:
 1. activate the virtual envrionment under path flask-server\taskavm\Scripts\activate
+    - remember to choose the python interpreter as the virtual environment's python.exe
 2. create a simple MYSQLDB with Logo table (Logo_ID, Logo_Storage_ID, Storage_Path), connect with configuration at the start of the app.py
 3. run the app.py
 4. run on your local broswer

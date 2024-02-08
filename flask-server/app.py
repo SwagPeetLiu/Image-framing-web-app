@@ -34,12 +34,13 @@ def upload_logo():
         return jsonify({"message": "Logo successfully uploaded!","StorageID" : new_id})
 
     except Exception as e:
+        print ("error_XSYZ" + str(e))
         return jsonify({"error": str(e)}), 500
     
 # handling of image file path insertion
 def save_Image_Path(save_path, timestamp):
     cursor = mysql.connection.cursor()
-
+    print("new id" + save_path)
     # insert new row of Path
     cursor.execute('''
         INSERT INTO logo(Logo_Storage_Path, Storage_Time)
@@ -50,6 +51,7 @@ def save_Image_Path(save_path, timestamp):
     cursor.execute('SELECT LAST_INSERT_ID() AS new_id')
     result = cursor.fetchone()
     new_id = result['new_id']
+    print("new id" + str(new_id))
     
     # commit and close cursor
     cursor.close()
@@ -90,6 +92,17 @@ def convert_path(storage_path):
     relative_path = relative_path.replace(os.path.sep, "/")
     return relative_path
 
+# Route for testing database connection
+@app.route("/testdb")
+def test_db_connection():
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT 1")
+        cursor.close()
+        return jsonify({"message": "Database connection successful"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 # enable debugging, assuming a development environment
 if __name__ == '__main__':
     app.run(debug=True)
